@@ -15,19 +15,32 @@ import java.util.*;
 public class Testhbase01 {
     private  static Configuration conf;
     private  static HTable table;
-
     public  static void  main(String[] args) throws IOException, InterruptedException {
              conf=HBaseConfiguration.create();
              conf.addResource("hbase-site.xml");
              table=new HTable(conf,"zym02");  //创建table
              Testhbase01 hbase=new Testhbase01();
-            // hbase.put();
-            // hbase.delete();
-            // hbase.listput();
-            // hbase.checkAndput();
-            // hbase.batch();
-               hbase.Scan();
+            // hbase.put();       //插入数据
+            // hbase.delete();    //删除数据
+            // hbase.listput();   //批量放入
+            // hbase.checkAndput();//原子性检查
+            // hbase.batch();     //批量操作
+            // hbase.Scan();      //扫描表，获取数据
+               hbase.Cach();      //数据的缓存
+
+
+
+
+             table.close();
           }
+
+    /**
+     *其他方法
+     */
+    public  void  other(){
+     table.getName(); //获取表的名字
+     table.getConfiguration();//获取配置文件
+    }
 
 
     /**
@@ -173,9 +186,27 @@ public class Testhbase01 {
 
     /**
      * 缓存与批量处理
-     *
+     * 每调用一次next就会调用一次RPC请求(有风险)
      */
-    public void Cach(){
+    public void Cach() throws IOException {
+     //设置表级缓存 面向行一级的操作
+      Scan scan=new Scan(); //其设置的值的大小影响着RPC请求次数,看具体情况
+      scan.setCaching(20); //缓存面向行级
+      scan.setBatch(2);    //批量面向列级
+      ResultScanner res=table.getScanner(scan);
+      Iterator<Result> ier=res.iterator();
+      try {
+      while (ier.hasNext()){
+         Result r=ier.next();
+         System.out.println(r);
+      }
+          res.close();
+      }catch (Exception e){
+          e.printStackTrace();
+      }finally {
+          res.close();
+      }
+      //设置
 
     }
 

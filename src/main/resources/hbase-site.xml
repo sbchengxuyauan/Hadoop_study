@@ -51,4 +51,9 @@
            <name>hbase.client.write.buffer</name>
            <value>20971520</value>
          </property>
+       <!--设置一次性读取的行数,默认为10行-->
+        <property>
+           <name>hbase.client.scanner.caching</name>
+           <value>10</value>
+        </property>
 </configuration>
