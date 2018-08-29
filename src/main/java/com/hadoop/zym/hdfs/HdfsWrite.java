@@ -2,10 +2,7 @@ package com.hadoop.zym.hdfs;
 
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
 
 import java.io.*;
 
@@ -15,10 +12,11 @@ public class HdfsWrite {
     public static  void main(String[] args) throws IOException {
         Configuration conf=new Configuration();
         ConnectionHdfs hdfs=new ConnectionHdfs();
-        String path="/write/test12.txt";
+        String path="D:\\Personal\\Desktop\\da\\delete.txt";
         HdfsWrite write=new HdfsWrite();
-        write.TestWrite(path,conf);
+        //write.TestWrite(path,conf);
         //write.Testread(path,conf);
+        write.delete(path,conf);
     }
 
 
@@ -98,6 +96,19 @@ public class HdfsWrite {
 //            System.out.println(new String(buf,"utf-8"));
 //        }
         in.close();
+
+    }
+
+    public void delete(String path,Configuration configuration) throws IOException {
+        Path path1=new Path(path);
+        configuration.set("fs.default.name","hdfs://192.168.147.130:9000"); //配置文件系统
+//        FileSystem fileSystem=FileSystem.get(configuration);
+//        File file=new File(path);
+//        file.delete();
+//        fileSystem.delete(path1,true);
+        LocalFileSystem local=FileSystem.getLocal(configuration);
+        local.delete(path1,true);
+
 
     }
 

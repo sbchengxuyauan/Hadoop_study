@@ -58,6 +58,12 @@
         <artifactId>hadoop-hdfs</artifactId>
         <version>3.0.3</version>
     </dependency>
+        <!--高版本的hbase-->
+    <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>1.2.1</version>
+    </dependency>
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-common</artifactId>
