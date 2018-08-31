@@ -56,4 +56,8 @@
            <name>hbase.client.scanner.caching</name>
            <value>10</value>
         </property>
+        <property>
+        <name>hbase.master.info.port</name>
+        <value>60010</value>
+        </property>
 </configuration>

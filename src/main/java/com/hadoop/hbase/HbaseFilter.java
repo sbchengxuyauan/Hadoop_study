@@ -2,7 +2,6 @@ package com.hadoop.hbase;
 
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
@@ -245,7 +244,6 @@ public class HbaseFilter {
         sum=sum+1;
         }
         }
-
     }
 
     /**
@@ -492,7 +490,52 @@ public class HbaseFilter {
     }
 
 
+    /**
+     * 列表过滤器
+     */
+    public void FilterList() throws IOException {
+   //FilterList list=new FilterList(FilterList.Operator.MUST_PASS_ALL); //其也实现了Filter接口
+     FilterList list=new FilterList(FilterList.Operator.MUST_PASS_ONE);
+     list.addFilter(new PrefixFilter(Bytes.toBytes("row999")));
+     list.addFilter(new ColumnPrefixFilter(Bytes.toBytes("c999")));
+     Scan scan=new Scan();
+     scan.setFilter(list);
+     ResultScanner res=table.getScanner(scan);
+     try {
+         Iterator<Result> ier = res.iterator();
+         while (ier.hasNext()) {
+             Result r = ier.next();
+             System.out.println(r);
+         }
+     }catch (Exception e){
+         e.printStackTrace();
+     }finally {
+         res.close();
+         table.close();
+     }
+    }
 
+    /**
+     * 自定义过滤器
+     */
+    public void  MyFilter() throws IOException {
+        Scan scan=new Scan();
+        MyFilter  myFilter=new MyFilter((Bytes.toBytes("sicuan")));
+        scan.setFilter(myFilter);
+        ResultScanner res=table.getScanner(scan);
+        Iterator<Result> ier=res.iterator();
+        try {
+            while (ier.hasNext()) {
+                Result r = ier.next();
+                System.out.println(r);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            res.close();
+            table.close();
+        }
+    }
 
     public static  void main(String[] args) throws IOException {
         conf=HBaseConfiguration.create();
@@ -513,7 +556,9 @@ public class HbaseFilter {
         // hbaseFilter.Columnpre();   //列前缀过滤器
         // hbaseFilter.radom();       //随机行过滤
         // hbaseFilter.myFilter();    //跳转过滤器
-           hbaseFilter.allpre();
+        // hbaseFilter.allpre();      //全局过滤器
+        // hbaseFilter.FilterList();  //列表过滤器 支持多个过 滤器同时过滤
+           hbaseFilter.MyFilter();    //自定义过滤器
     }
 
 }
