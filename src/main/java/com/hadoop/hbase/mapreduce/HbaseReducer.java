@@ -1,27 +1,22 @@
-package com.hadoop.zym.mapreduce;
-
-
+package com.hadoop.hbase.mapreduce;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+
 import java.io.IOException;
 
-
-/**
- * reduce程序
- */
-public class MyReducer  extends Reducer<Text,IntWritable,Text,IntWritable> {  //泛型 输入类型，输出类型
+public class HbaseReducer extends Reducer <Text,IntWritable,Text,IntWritable> {
 
     @Override
-    public void reduce(Text text,Iterable<IntWritable> values,Context context) throws IOException, InterruptedException {
+    public void reduce(Text text, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
         int MAX=0;
         while(values.iterator().hasNext()){
             int K=values.iterator().next().get();
             System.out.println(K);
             if(K>=MAX){
-               MAX=K;
-           }
+                MAX=K;
+            }
         }
         context.write(text,new IntWritable(MAX));
     }

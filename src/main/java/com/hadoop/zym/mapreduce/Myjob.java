@@ -56,6 +56,5 @@ public class Myjob extends Configured {   //Tool支持处理命令行模式
               e.printStackTrace();
               System.out.println(e.getMessage());
           }
-
       }
 }
